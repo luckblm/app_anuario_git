@@ -14,17 +14,11 @@ shinyApp(
               )),
       
       tags$li(class = "dropdown",
-              a(href = "https://www.instagram.com/seuperfildoinstagram",
+              a(href = "https://www.instagram.com/fapespa/",
                 class = "fa fa-instagram",
                 target = "_blank"
               )
-      ),
-      
-      tags$li(class = "dropdown",
-              a(href = "https://twitter.com/seuperfildotwitter",
-                class = "fa fa-twitter",
-                target = "_blank"
-              ))
+      )
     ), 
     # dbHeader,
     skin = "black",
