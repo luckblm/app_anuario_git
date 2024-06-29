@@ -91,7 +91,7 @@ sobre_Server <- function(id) {}
 #   header = dashboardHeader(),
 #   sidebar = dashboardSidebar(),
 #   body = dashboardBody(fluidPage(sobre_ui("sobre")))
-#   
+# 
 # )
 # server <- function(input, output) {
 #   sobre_Server("sobre")
