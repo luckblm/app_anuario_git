@@ -10,7 +10,7 @@ social_saude_pa_ui <- function(id) {
       navbarPage(
         tags$b("Saúde - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1-Taxa de Mortalidade Infantil----
           tabPanel(
             "Taxa de Mortalidade Infantil",

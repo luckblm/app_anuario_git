@@ -11,7 +11,7 @@ social_merc_tab_mp_ui <- function(id) {
       navbarPage(
         tags$b("Mercado de Trabalho - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Vínculos Empregatícios Total no Emprego Formal----
           tabPanel(
             "Vínculos Empregatícios Total no Emprego Formal",

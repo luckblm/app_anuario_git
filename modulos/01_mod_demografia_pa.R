@@ -9,7 +9,7 @@ demografia_pa_ui <- function(id) {
       navbarPage(
         tags$b("Demografia - Pará"),
         navbarMenu( 
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           #1 - População Total e Estimativas poplulacionais----
           tabPanel(
             "Estimativas Populacionais",
@@ -1303,13 +1303,16 @@ demografia_pa_Server <- function(id) {
         )
       conteudo <-
         sprintf(
-          "<strong>%s</strong><br/> <b>População:</b> %s",
+          "<strong>Município de %s</strong><br/> <b>População:</b> %s<br/> 
+          <b>Percentual:</b> %s%% ",
           x$name_muni,
           ifelse(
             is.na(x$valor),
             "Não disponível",
             format(x$valor, big.mark = ".", decimal.mark = ",")
-          )
+            
+          ),
+          format(round((x$valor / sum(x$valor, na.rm = TRUE)) * 100, 2), decimal.mark = ",")
         ) %>% lapply(htmltools::HTML)
       #Mapas com leafleft
       leaflet(x, options = leafletOptions(minZoom = 0, maxZoom = 15)) %>%
@@ -1922,27 +1925,27 @@ demografia_pa_Server <- function(id) {
         bins <- 5
       }
       
-      pal <-
-        colorBin(
-          c("#B6EDF0", "#74B4E8", "#1F83E0", "#1D44B8", "#090991"),
-          domain = x$valor,
-          bins = bins
-        )
-      conteudo <-
-        sprintf(
-          "<strong>%s</strong><br/> <b>Razão:</b> %s",
-          x$name_muni,
-          ifelse(
-            is.na(x$valor),
-            "Não disponível",
-            format(
-              x$valor,
-              big.mark = ".",
-              decimal.mark = ",",
-              digits = 4
-            )
+      
+      # Criar uma coluna que define a cor com base no sexo predominante
+      x <- x %>%
+        mutate(
+          cor = case_when(
+            valor < 100 ~ "#e616d4",   # Rosa para predominância de mulheres
+            valor > 100 ~ "#1159df",   # Azul para predominância de homens
+            valor == 100 ~ "#33b60b"   # Verde para empate
           )
-        ) %>% lapply(htmltools::HTML)
+        )
+      
+      # Criar conteúdo para as labels, mostrando o número de condutores por sexo e o sexo predominante
+      conteudo <- sprintf(
+        "<strong>Município de %s</strong><br/>
+           <b>Predominância:</b> %s<br/>
+           <b>Razão:</b> %s",
+        x$name_muni,
+        ifelse(x$valor < 100, "Mulheres","Homens"),
+        format(round(x$valor, 2), big.mark = ".", decimal.mark = ",")
+      ) %>% lapply(htmltools::HTML)
+      
       #Mapas com leafleft
       leaflet(x, options = leafletOptions(minZoom = 0, maxZoom = 15)) %>%
         addTiles() %>%
@@ -1951,7 +1954,7 @@ demografia_pa_Server <- function(id) {
           opacity = 1,
           color = "black",
           fillOpacity = 1,
-          fillColor = ~ pal(valor),
+          fillColor = ~cor,
           dashArray = 1,
           smoothFactor = 1.5,
           highlightOptions =
@@ -1968,19 +1971,14 @@ demografia_pa_Server <- function(id) {
             textsize = "15px",
             direction = "auto"
           )
-        ) %>% addLegend(
-          pal = pal,
-          values = ~ valor,
+        ) %>% 
+        addLegend(
+          colors = c("#1159df", "#e616d4", "#33b60b"),  # Incluir a cor verde e cinza na legenda
+          labels = c("Predominância Masculina", "Predominância Feminina", "Empate"),
           opacity = 0.7,
-          title = "Razão",
-          position = "bottomright",
-          na.label = "Não disponível",
-          labFormat = labelFormat_decimal(
-            big.mark = ".",
-            decimal.mark = ",",
-            digits = 2
-          )
-        )
+          title = "Predominância por Sexo",
+          position = "bottomright"
+        )  
     })
     ##Tabela Razão de sexo----
     output$demo4txt2 <- renderText({

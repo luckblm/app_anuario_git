@@ -10,7 +10,7 @@ social_saude_mp_ui <- function(id) {
       navbarPage(
         tags$b("Saúde - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1-Taxa de Mortalidade Infantil----
           tabPanel(
             "Taxa de Mortalidade Infantil",

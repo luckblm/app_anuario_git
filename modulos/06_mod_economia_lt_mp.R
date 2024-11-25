@@ -12,7 +12,7 @@ economia_lt_mp_ui <- function(id) {
       navbarPage(
         tags$b("Lavoura Temporária - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Área Destinada à Colheita----
           tabPanel(
             "Área Destinada à Colheita",

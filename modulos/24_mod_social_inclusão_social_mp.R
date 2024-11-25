@@ -10,7 +10,7 @@ social_inclusao_social_mp_ui <- function(id) {
       navbarPage(
         tags$b("Inclusão Social - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Famílias Atendidas e Valor Total Empregado no Programa Bolsa Família----
           tabPanel(
             "Famílias Atendidas e Valor Total Empregado no Programa Bolsa Família",

@@ -42,8 +42,8 @@ sobre_ui <- function(id) {
                  tags$hr(),
                  tags$div(
                    style = "text-align: center;",
-                   tags$img(src = "Rlogo.png", width = 100, style = "margin-right: 10px;"),
-                   tags$img(src = "Shinyrlogo.png", width = 50, style = "margin-left: 10px;")
+                   tags$img(src = "Rlogo.png", width = 100, style = "margin-right: 10px;") %>% animateAppend("pulse",speed = "slow"),
+                   tags$img(src = "Shinyrlogo.png", width = 50, style = "margin-left: 10px;") %>% animateAppend("pulse",speed = "slow")
                  )
                )
         ),
@@ -86,15 +86,15 @@ sobre_Server <- function(id) {}
 #   }
 #   shinyApp(ui, server)
 # }
-# #Play do Módulo
-# ui <- dashboardPage(
-#   header = dashboardHeader(),
-#   sidebar = dashboardSidebar(),
-#   body = dashboardBody(fluidPage(sobre_ui("sobre")))
-# 
-# )
-# server <- function(input, output) {
-#   sobre_Server("sobre")
-# }
-# 
-# shinyApp(ui, server)
+#Play do Módulo
+ui <- dashboardPage(
+  header = dashboardHeader(),
+  sidebar = dashboardSidebar(),
+  body = dashboardBody(fluidPage(sobre_ui("sobre")))
+
+)
+server <- function(input, output) {
+  sobre_Server("sobre")
+}
+
+shinyApp(ui, server)

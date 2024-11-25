@@ -10,7 +10,7 @@ economia_fp_pa_ui <- function(id) {
                 navbarPage(
                   tags$b("Finanças Públicas - Pará"),
                   navbarMenu(
-                    "Indicadores",
+                    tags$b("Escolha um Indicador"),
                     # 1 - Repasse de ICMS----
                     tabPanel(
                       "Repasse de ICMS",

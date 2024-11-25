@@ -8,7 +8,7 @@ social_previdencia_mp_ui <- function(id) {
             div(class = "navbar_social", navbarPage(
               tags$b("Previdência Social - Municípios"),
               navbarMenu(
-                "Indicadores",
+                tags$b("Escolha um Indicador"),
                 # 1 - Quantidade de Benefícios Emitidos em Dezembro----
                 tabPanel(
                   "Quantidade de Benefícios Emitidos em Dezembro",

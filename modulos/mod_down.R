@@ -457,8 +457,7 @@ down_Server <- function(id) {
           title = "Tutorial",
           tags$p(
             style = "text-align:justify;",
-            "Este é um tutorial sobre como usar a seção de download. Primeiro, você precisa selecionar os dados que deseja baixar usando os filtros disponíveis. Depois de selecionar os dados, clique no botão 'Download' para baixar os dados selecionados. Se você quiser baixar todos os dados, clique no botão 'Baixar tudo'."
-          ),
+            "Este é um tutorial sobre como utilizar a seção de download. Primeiro, selecione os dados desejados utilizando os filtros disponíveis. Após a seleção, clique no botão 'Download' para baixar os dados escolhidos. Caso prefira baixar todos os dados, clique no botão 'Baixar tudo'."),
           easyClose = TRUE,
           footer = tagList(actionButton(
             NS(id, "iniciar"), tags$b("Iniciar")

@@ -10,7 +10,7 @@ social_previdencia_pa_ui <- function(id) {
       navbarPage(
         tags$b("Previdência Social - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Quantidade de Benefícios Emitidos em Dezembro----
           tabPanel(
             "Quantidade de Benefícios Emitidos em Dezembro",

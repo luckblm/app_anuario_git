@@ -11,7 +11,7 @@ demografia_mp_ui <- function(id) {
       navbarPage(
         tags$b("Demografia - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - População Total e Estimativas poplulacionais----
           tabPanel(
             "Estimativas Populacionais",
@@ -1191,9 +1191,9 @@ demografia_mp_Server <- function(id) {
           "Razão de dependência, ",
           input$demo7muni,
           " - ",
-          max(demo7$ano),
+          min(demo7$ano),
           " a ",
-          min(demo7$ano)
+          max(demo7$ano)
         )
       } else {
         paste0(
@@ -1202,9 +1202,9 @@ demografia_mp_Server <- function(id) {
           " x ",
           input$demo7municomp,
           " - ",
-          max(demo7$ano),
+          min(demo7$ano),
           " a ",
-          min(demo7$ano)
+          max(demo7$ano)
         )
       }  
     })

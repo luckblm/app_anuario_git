@@ -10,7 +10,7 @@ economia_lt_pa_ui <- function(id) {
                 navbarPage(
                   tags$b("Lavoura Temporária - Pará"),
                   navbarMenu(
-                    "Indicadores",
+                    tags$b("Escolha um Indicador"),
                     # 1 - Área plantada----
                     tabPanel(
                       "Área plantada",

@@ -9,7 +9,7 @@ economia_fp_mp_ui <- function(id) {
             div(class = "navbar_economia", navbarPage(
               tags$b("Finanças Públicas - Municípios"),
               navbarMenu(
-                "Indicadores",
+                tags$b("Escolha um Indicador"),
                 # 1 - Repasse de ICMS----
                 tabPanel(
                   "Repasse de ICMS",

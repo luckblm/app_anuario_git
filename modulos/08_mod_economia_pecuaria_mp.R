@@ -13,7 +13,7 @@ economia_pec_mp_ui <- function(id) {
       navbarPage(
         tags$b("Pecuária - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Efetivo de Rebanho bovino (Cabeça)----
           tabPanel(
             "Efetivo de Rebanho bovino (Cabeça)",

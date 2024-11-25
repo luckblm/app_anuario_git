@@ -12,7 +12,7 @@ economia_lp_mp_ui <- function(id) {
       navbarPage(
         tags$b("Lavoura Permanente - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Área Destinada à Colheita----
           tabPanel(
             "Área Destinada à Colheita",
@@ -829,7 +829,7 @@ economia_lp_mp_Server <- function(id) {
           )
         ) %>%
         e_locale("pt-Br") %>%
-        e_grid(show = T, width = "80%", height = "80%", left = "10%") %>%
+        e_grid(show = F, width = "80%", height = "80%", left = "30%") %>%
         e_flip_coords()
     })
     ## Gráfico de linha- Área Destinada à Colheita  - Total----

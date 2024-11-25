@@ -9,7 +9,7 @@ economia_bc_mp_ui <- function(id) {
             div(class = "navbar_economia", navbarPage(
               tags$b("Balança Comercial - Municípios"),
               navbarMenu(
-                "Indicadores",
+                tags$b("Escolha um Indicador"),
                 # 1 - Balança Comercial - Exportação----
                 tabPanel(
                   "Balança Comercial - Exportação",

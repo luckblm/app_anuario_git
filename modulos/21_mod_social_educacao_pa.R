@@ -9,7 +9,7 @@ social_educacao_pa_ui <- function(id) {
       navbarPage(
         tags$b("Eduação - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           #1 - Taxa de Aprovação no Ensino Fundamental por Esfera Administrativa----
           tabPanel(
             "Taxa de Aprovação no Ensino Fundamental",

@@ -10,7 +10,7 @@ economia_exv_pa_ui <- function(id) {
                 navbarPage(
                   tags$b("Extração Vegetal - Pará"),
                   navbarMenu(
-                    "Indicadores",
+                    tags$b("Escolha um Indicador"),
                     # 1 - Quantidade Produzida na Extração Vegetal, por Tipo de Produto Extrativo----
                     tabPanel(
                       "Quantidade Produzida na Extração Vegetal, por Tipo de Produto Extrativo",

@@ -12,7 +12,7 @@ economia_pib_mp_ui <- function(id) {
       navbarPage(
         tags$b("PIB - Municipios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Produto Interno Bruto a Preços Correntes (Mil Reais)----
           tabPanel(
             "Produto Interno Bruto a Preços Correntes (Mil Reais)",

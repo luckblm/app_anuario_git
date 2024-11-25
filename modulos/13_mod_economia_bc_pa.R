@@ -12,7 +12,7 @@ economia_bc_pa_ui <- function(id) {
       navbarPage(
         tags$b("Balança Comercial - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Balança Comercial - Exportação----
           tabPanel(
             "Exportação",

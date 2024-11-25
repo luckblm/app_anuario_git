@@ -10,6 +10,7 @@ pacman::p_load(
   shinyjs, # Permite usar JavaScript em aplicativos Shiny
   waiter, # Adiciona telas de carregamento a aplicativos Shiny
   rintrojs,
+  spsComps,
   
   # Manipulação e visualização de dados
   tidyverse, # Uma coleção de pacotes R para manipulação e visualização de dados

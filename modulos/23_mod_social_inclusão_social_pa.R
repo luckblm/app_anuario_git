@@ -11,7 +11,7 @@ social_inclusao_social_pa_ui <- function(id) {
       navbarPage(
         tags$b("Inclusão Social - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Famílias Atendidas e Valor Total Empregado no Programa Bolsa Família----
           tabPanel(
             "Famílias Atendidas e Valor Total Empregado no Programa Bolsa Família",
@@ -1452,7 +1452,7 @@ social_inclusao_social_pa_Server <- function(id) {
           labFormat = labelFormat_decimal(big.mark = ".", decimal.mark = ",", digits = 2)
         )
     })
-    ## Tabela - otal de famílias inscritas no Cadastro Único para Programas Sociais (CadÚnico) com rendimento familiar per capita de até 1/2 salário mínimo----
+    ## Tabela - Total de famílias inscritas no Cadastro Único para Programas Sociais (CadÚnico) com rendimento familiar per capita de até 1/2 salário mínimo----
     output$inc4txt2 <- renderText({
       t42()
     })

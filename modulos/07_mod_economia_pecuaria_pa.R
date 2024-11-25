@@ -10,7 +10,7 @@ economia_pec_pa_ui <- function(id) {
             div(class = "navbar_economia", navbarPage(
               tags$b("Pecuária - Pará"),
               navbarMenu(
-                "Indicadores",
+                tags$b("Escolha um Indicador"),
                 # 1 - Efetivo de Rebanho bovino (Cabeça)----
                 tabPanel(
                   "Efetivo de Rebanho bovino (Cabeça)",

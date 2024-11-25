@@ -8,7 +8,7 @@ infraestrutura_pa_ui <- function(id) {
       navbarPage(
         tags$b("Infraestrutura - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Total da Frota de Veículos Subdivididos em Licenciados e Não Licenciados----
           tabPanel(
             "Total da Frota de Veículos Subdivididos em Licenciados e Não Licenciados",

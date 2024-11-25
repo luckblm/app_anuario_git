@@ -11,7 +11,7 @@ social_seguranca_pa_ui <- function(id) {
       navbarPage(
         tags$b("Segurança - Pará"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1-Taxa de Homicídios Total por 100.000 habitantes----
           tabPanel(
             "Taxa de Homicídios Total por 100.000 habitantes",

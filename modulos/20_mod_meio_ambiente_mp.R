@@ -11,7 +11,7 @@ meio_ambiente_mp_ui <- function(id) {
       navbarPage(
         tags$b("Meio Ambiente - Municípios"),
         navbarMenu(
-          "Indicadores",
+          tags$b("Escolha um Indicador"),
           # 1 - Desflorestamento Acumulado (km²)----
           tabPanel(
             "Desflorestamento Acumulado (km²)",

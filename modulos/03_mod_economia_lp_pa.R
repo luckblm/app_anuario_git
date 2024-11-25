@@ -10,7 +10,7 @@ economia_lp_pa_ui <- function(id) {
                 navbarPage(
                   tags$b("Lavoura Permanente - Pará"),
                   navbarMenu(
-                    "Indicadores",
+                    tags$b("Escolha um Indicador"),
                     # 1 - Área Destinada à Colheita----
                     tabPanel(
                       "Área Destinada à Colheita",
@@ -2386,12 +2386,12 @@ economia_lp_pa_Server <- function(id) {
 }
 
 #Play do Módulo
-# ui <- dashboardPage(header = dashboardHeader(),
-#                     sidebar = dashboardSidebar(),
-#                     body = dashboardBody(fluidPage(economia_lp_pa_ui("economia_lp_pa"))))
-# 
-# server <- function(input, output) {
-#   economia_lp_pa_Server("economia_lp_pa")
-# }
-# 
-# shinyApp(ui, server)
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = dashboardBody(fluidPage(economia_lp_pa_ui("economia_lp_pa"))))
+
+server <- function(input, output) {
+  economia_lp_pa_Server("economia_lp_pa")
+}
+
+shinyApp(ui, server)
