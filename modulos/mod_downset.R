@@ -1,12 +1,55 @@
 #Função de modulo de UI Donwload
 downset_ui <- function(id) {
   fluidPage(
+    
+    tags$head(
+      tags$style(HTML("
+    .btn-custom {
+      background-color: #4CAF50; /* Cor de fundo (verde) */
+      color: white; /* Cor do texto e ícone */
+      border-color: #4CAF50; /* Cor da borda */
+    }
+    .btn-custom:hover {
+      background-color: #45a049; /* Cor ao passar o mouse */
+      color: white; /* Certifica-se de manter o texto e ícone brancos */
+    }
+    
+    .btn-excel {
+      background-color: #217346; /* Verde para Excel */
+      color: white; 
+      border-color: #217346;
+    }
+    .btn-excel:hover {
+      background-color: #1a5b37; /* Cor ao passar o mouse */
+    }
+    .btn-csv {
+      background-color: #ff9900; /* Laranja para CSV */
+      color: white; 
+      border-color: #ff9900;
+    }
+    .btn-csv:hover {
+      background-color: #cc7a00; /* Cor ao passar o mouse */
+    }
+    .btn-rdata {
+      background-color: #0073e6; /* Azul para RData */
+      color: white; 
+      border-color: #0073e6;
+    }
+    .btn-rdata:hover {
+      background-color: #005bb5; /* Cor ao passar o mouse */
+    }
+  "
+  ))
+    ),
+    
+    
     dropMenu(
       padding = "20px",
       placement = "left",
       actionButton(NS(id, "demo1down"),
                    tags$b("Download"),
-                   icon = icon("download")),
+                   icon = icon("download"),
+                   class = "btn-custom"),
       tags$p("Escolha o formato de arquivo para download:"),
       tags$p("Excel (XLSX), CSV ou RData. Obrigado!"),
       tags$hr(),
@@ -14,19 +57,19 @@ downset_ui <- function(id) {
         NS(id, "xlsx"),
         label = "Excel",
         icon = icon("file-excel"),
-        class = "btn btn-link"
+        class = "btn btn-excel"
       ),
       downloadButton(
         NS(id, "csv"),
         label = "CSV",
         icon = icon("file-csv"),
-        class = "btn btn-link"
+        class = "btn btn-csv"
       ),
       downloadButton(
         NS(id, "rds"),
         label = "RData",
         icon = icon("database"),
-        class = "btn btn-link"
+        class = "btn btn-rdata"
       )
     )
   )

@@ -50,7 +50,9 @@ demografia_mp_ui <- function(id) {
                     choices = NULL,
                     width = "200px",
                     options = list(`none-selected-text` = "Selecione um município")
-                  )
+                  ),
+                  uiOutput(NS(id,"v01")),
+                  
                 ),
                 column(
                   12,
@@ -1284,6 +1286,21 @@ demografia_mp_Server <- function(id) {
     #VISUALIZAÇÃO----
     # 1- População Total e Estimativas Populacionais ----
     ## Gráfico  de linha - População Total e Estimativas poplulacionais----
+    #Seletor para gráficos de linha
+    output$v01 <- renderUI({
+      req(input$demo1municomp)
+      if (input$demo1municomp != "Selecione um município") {
+        prettyRadioButtons(
+          inputId = NS(id, "pdv1"),
+          label = "Visualização",
+          choices = c("Comparação", "Tendência"),
+          inline = TRUE,
+          status = "default",
+          fill = TRUE
+        )  
+      }
+        
+    })
     # Atualização da entrada
     demo1comp <- reactive({
       input$demo1muni
@@ -1352,60 +1369,141 @@ demografia_mp_Server <- function(id) {
           e_datazoom(toolbox = F, fillerColor = "#E5F5F9") %>%
           e_grid(show = T)
       } else {
-        a <- demo1 %>% filter(localidade == input$demo1muni)
-        b <- demo1 %>% filter(localidade == input$demo1municomp)
-        a %>%
-          e_charts(x = ano) %>%
-          e_line(
-            serie = valor,
-            name = input$demo1muni,
-            legend = T,
-            symbol = "roundRect",
-            symbolSize = 6,
-            legendHoverLink = T,
-            itemStyle = list(barBorderRadius = 5)
-          ) %>%
-          e_data(b, ano) %>%
-          e_line(
-            serie = valor,
-            name = input$demo1municomp,
-            legend = T,
-            symbol = "roundRect",
-            symbolSize = 6,
-            legendHoverLink = T,
-            itemStyle = list(barBorderRadius = 5)
-          ) %>%
-          e_tooltip(
-            trigger = "axis",
-            formatter =
-              e_tooltip_pointer_formatter("decimal", digits = 0, locale = "pt-Br"),
-            axisPointer = list(type = "shadow")
-          ) %>%
-          e_x_axis(
-            axisLabel = list(show = T, fontSize = 11),
-            name = "Ano",
-            splitLine = list(show = T),
-            nameTextStyle = list(fontWeight = "bold", fontSize = 14)
-          ) %>%
-          e_y_axis(
-            name = "População",
-            nameTextStyle = list(fontWeight = "bold", fontSize = 14),
-            scale = T,
-            axisLabel = list(
-              formatter = htmlwidgets::JS(
-                "
+        #Gráfico de comparação
+        req(input$pdv1)
+        if (input$pdv1 == "Comparação") {
+          a <- demo1 %>% filter(localidade == input$demo1muni)
+          b <- demo1 %>% filter(localidade == input$demo1municomp)
+          a %>%
+            e_charts(x = ano) %>%
+            e_bar(
+              serie = valor,
+              name = input$demo1muni,
+              legend = T,
+              symbol = "roundRect",
+              symbolSize = 6,
+              legendHoverLink = T,
+              itemStyle = list(barBorderRadius = 5)
+            ) %>%
+            e_data(b, ano) %>%
+            e_bar(
+              serie = valor,
+              name = input$demo1municomp,
+              legend = T,
+              symbol = "roundRect",
+              symbolSize = 6,
+              legendHoverLink = T,
+              itemStyle = list(barBorderRadius = 5)
+            ) %>%
+            e_tooltip(
+              trigger = "axis",
+              formatter =
+                e_tooltip_pointer_formatter("decimal", digits = 0, locale = "pt-Br"),
+              axisPointer = list(type = "shadow")
+            ) %>%
+            e_x_axis(
+              axisLabel = list(show = T, fontSize = 11),
+              name = "Ano",
+              splitLine = list(show = T),
+              nameTextStyle = list(fontWeight = "bold", fontSize = 14)
+            ) %>%
+            e_y_axis(
+              name = "População",
+              nameTextStyle = list(fontWeight = "bold", fontSize = 14),
+              scale = T,
+              axisLabel = list(
+                formatter = htmlwidgets::JS(
+                  "
               function (value, index) {
               return value.toLocaleString('pt-BR',
               { minimumFractionDigits: 0, maximumFractionDigits: 0 });
               }
             "
+                )
               )
-            )
-          ) %>%
-          e_locale("pt-Br") %>%
-          e_datazoom(toolbox = F, fillerColor = "#E5F5F9") %>%
-          e_grid(show = T)
+            ) %>%
+            e_locale("pt-Br") %>%
+            e_datazoom(toolbox = F, fillerColor = "#E5F5F9") %>%
+            e_grid(show = T)  
+        #Grafico tendência
+          } else {
+            a <- demo1 %>% filter(localidade == input$demo1muni)
+            b <- demo1 %>% filter(localidade == input$demo1municomp)
+            a %>%
+              e_charts(x = ano) %>%
+              e_line(
+                serie = valor,
+                name = input$demo1muni,
+                legend = T,
+                symbol = "roundRect",
+                symbolSize = 6,
+                legendHoverLink = T,
+                itemStyle = list(barBorderRadius = 5)
+              ) %>%
+              e_data(b, ano) %>%
+              e_line(
+                y_index = 1,
+                serie = valor,
+                name = input$demo1municomp,
+                legend = T,
+                symbol = "roundRect",
+                symbolSize = 6,
+                legendHoverLink = T,
+                itemStyle = list(barBorderRadius = 5)
+              ) %>%
+              e_tooltip(
+                trigger = "axis",
+                formatter =
+                  e_tooltip_pointer_formatter("decimal", digits = 0, locale = "pt-Br"),
+                axisPointer = list(type = "shadow")
+              ) %>%
+              e_x_axis(
+                axisLabel = list(show = T, fontSize = 11),
+                name = "Ano",
+                splitLine = list(show = T),
+                nameTextStyle = list(fontWeight = "bold", fontSize = 14)
+              ) %>%
+              #Eixo muni1
+              e_y_axis(
+                name = input$demo1muni,
+                nameTextStyle = list(fontWeight = "bold", fontSize = 14),
+                scale = T,
+                axisLabel = list(
+                  formatter = htmlwidgets::JS(
+                    "
+              function (value, index) {
+              return value.toLocaleString('pt-BR',
+              { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+              }
+            "
+                  )
+                )
+              ) %>%
+              #Eixo muni2
+              e_y_axis(
+                index = 1,
+                name = input$demo1municomp,
+                nameTextStyle = list(fontWeight = "bold", fontSize = 14),
+                scale = T,
+                axisLabel = list(
+                  formatter = htmlwidgets::JS(
+                    "
+              function (value, index) {
+              return value.toLocaleString('pt-BR',
+              { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+              }
+            "
+                  )
+                )
+              ) %>%
+              e_locale("pt-Br") %>%
+              e_datazoom(toolbox = F, fillerColor = "#E5F5F9") %>%
+              e_grid(show = T)  
+        }
+        
       }
+      
+      
     })
     ## Tabela - População Total e Estimativas Populacionais ----
     output$demo1txt2 <- renderText({

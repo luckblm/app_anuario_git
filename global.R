@@ -86,7 +86,7 @@ labelFormat_decimal <- function (prefix = "", suffix = "", between = " &ndash; "
   }
 }
 
-load(file = "anuario_2024-06-07.RData") 
+load(file = "anuario_2024-12-19.RData") 
 
 
 

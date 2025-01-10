@@ -11074,17 +11074,17 @@ social_educacao_mp_Server <- function(id) {
 }
 
 # Play do Módulo
-# ui <- dashboardPage(
-#   header = dashboardHeader(disable =),
-#   sidebar = dashboardSidebar(),
-#   body = dashboardBody(fluidPage(
-#     social_educacao_mp_ui("social_educacao_mp")
-#   ))
-# )
-# 
-# 
-# server <- function(input, output) {
-#   social_educacao_mp_Server("social_educacao_mp")
-# }
-# 
-# shinyApp(ui, server)
+ui <- dashboardPage(
+  header = dashboardHeader(disable =),
+  sidebar = dashboardSidebar(),
+  body = dashboardBody(fluidPage(
+    social_educacao_mp_ui("social_educacao_mp")
+  ))
+)
+
+
+server <- function(input, output) {
+  social_educacao_mp_Server("social_educacao_mp")
+}
+
+shinyApp(ui, server)

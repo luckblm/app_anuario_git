@@ -133,15 +133,6 @@ demografia_pa_ui <- function(id) {
                   choices <- c("Pará",unique(demo1[["ri"]]) %>% sort() %>% setdiff("Pará")),
                   width = "200px"
                 )
-              ),
-              tags$div(
-                class = "seletor2",
-                pickerInput(
-                  inputId = NS(id, "demo2cat"),
-                  label = "Faixa Etária",
-                  choices = unique(demo2[["categoria"]]),
-                  width = "200px"
-                )
               )
             ),
             fluidRow(
@@ -152,6 +143,13 @@ demografia_pa_ui <- function(id) {
                 collapsed = F,
                 headerBorder = T,
                 width = 12,
+                
+                pickerInput(
+                  inputId = NS(id, "demo2cat"),
+                  label = "Faixa Etária",
+                  choices = c("Predominância",unique(demo2[["categoria"]])),
+                  width = "200px"
+                ),
                 withSpinner(
                   leafletOutput(NS(id, "demo2map"), height = "600px"),
                   type = 8,
@@ -916,6 +914,21 @@ demografia_pa_Server <- function(id) {
     #2 - População por Faixa Etária----
     ## Mapa - População por Faixa Etária----
     t21 <- reactive({
+      if (input$demo2cat == "Predominância") {
+        if (input$demo2ri == "Pará") {
+          paste0(
+            "População Predominante por Faixa Etária - Pará - ",
+            input$demo2ano
+          )
+        } else{
+          paste0(
+            "População Predominante por Faixa Etária - Região de Integração ",
+            input$demo2ri,
+            " - ",
+            input$demo2ano
+          )
+        }  
+      } else {
       if (input$demo2ri == "Pará") {
         paste0(
           "População de ",
@@ -932,7 +945,7 @@ demografia_pa_Server <- function(id) {
           " - ",
           input$demo2ano
         )
-      }
+      }}
     })
     ## Tabela - População por Faixa Etária----
     t22 <- reactive({
@@ -1052,7 +1065,7 @@ demografia_pa_Server <- function(id) {
       if (input$demo5ri == "Pará") {
         paste0(
           "Proporção de idosos, ",
-          ", Pará - ",
+          " Pará - ",
           input$demo5ano
         )
       } else{
@@ -1467,88 +1480,224 @@ demografia_pa_Server <- function(id) {
     t21()  
     })
     output$demo2map <- renderLeaflet({
-      #Tratamento da informação
-      ##Filtrando informação
-      if (input$demo2ri == "Pará") {
-        df <-
-          demo2 %>% filter(localidade != "Pará",
-                           ano == input$demo2ano,
-                           categoria == input$demo2cat) %>%
-          select(ri, localidade, ano, valor)
-        x <- cbind(geopa, df)
-      }      else{
-        df <-
-          demo2 %>% filter(localidade != "Pará",
-                           ano == input$demo2ano,
-                           categoria == input$demo2cat) %>%
-          select(ri, localidade, ano, valor)
-        x <- cbind(geopa, df)
-        x <- x %>% filter(ri == input$demo2ri)
+      if (input$demo2cat == "Predominância") {
         
-      }
-      
-      z <- x$valor[x$valor > 0]
-      bk <- unique(getJenksBreaks(z, 6, subset = NULL))
-      x$valor[x$valor == 0] <- NA
-      bins <- c(bk)
-      if (length(bins) < 2 || length(bins) < 5) {
-        bins <- 5
-      }
-      
-      pal <-
-        colorBin(
-          c("#B6EDF0", "#74B4E8", "#1F83E0", "#1D44B8", "#090991"),
-          domain = x$valor,
-          bins = bins
-        )
-      conteudo <-
-        sprintf(
-          "<strong>%s</strong><br/> <b>População:</b> %s",
-          x$name_muni,
-          ifelse(
-            is.na(x$valor),
-            "Não disponível",
-            format(x$valor, big.mark = ".", decimal.mark = ",")
+        if (input$demo2ri == "Pará") {
+          df <- demo2 %>% filter(localidade != "Pará", ano == input$demo2ano) %>%
+            pivot_wider(names_from = "categoria", values_from = "valor")
+            
+            x <- cbind(geopa, df)
+        }else{
+          df <- demo2 %>% filter(localidade != "Pará", ano == input$demo2ano) %>%
+            pivot_wider(names_from = "categoria", values_from = "valor")
+            
+            x <- cbind(geopa, df)
+            x <- x %>% filter(ri == input$demo2ri)
+        }
+        
+        # Criar uma coluna que define a cor com base na faixa etária predominante
+        
+        # Ajuste dos dados com mutate
+        x <- x %>% 
+          mutate(
+            valor = pmax(X0.a.4.anos, X5.a.9.anos, X10.a.14.anos, X15.a.19.anos, X20.a.29.anos,  
+                         X30.a.39.anos, X40.a.49.anos, X50.a.59.anos, X60.a.69.anos, X70.a.79.anos, X80.anos.e.mais, na.rm = TRUE),
+            faixa_predominante = case_when(
+              valor == 0 ~ "Nenhum",
+              X0.a.4.anos == valor ~ "0 a 4 anos",
+              X5.a.9.anos == valor ~ "5 a 9 anos",
+              X10.a.14.anos == valor ~ "10 a 14 anos",
+              X15.a.19.anos == valor ~ "15 a 19 anos",
+              X20.a.29.anos == valor ~ "20 a 29 anos",
+              X30.a.39.anos == valor ~ "30 a 39 anos",
+              X40.a.49.anos == valor ~ "40 a 49 anos",
+              X50.a.59.anos == valor ~ "50 a 59 anos",
+              X60.a.69.anos == valor ~ "60 a 69 anos",
+              X70.a.79.anos == valor ~ "70 a 79 anos",
+              X80.anos.e.mais == valor ~ "80 anos e mais",
+              TRUE ~ "Indefinido"
+            ),
+            cor = case_when(
+              faixa_predominante == "Nenhum" ~ "gray",
+              faixa_predominante == "0 a 4 anos" ~ "#fdae61",
+              faixa_predominante == "5 a 9 anos" ~ "#fee08b",
+              faixa_predominante == "10 a 14 anos" ~ "#d73027",
+              faixa_predominante == "15 a 19 anos" ~ "#91bfdb",
+              faixa_predominante == "20 a 29 anos" ~ "#23eb70",
+              faixa_predominante == "30 a 39 anos" ~ "#953184",
+              faixa_predominante == "40 a 49 anos" ~ "#542788",
+              faixa_predominante == "50 a 59 anos" ~ "#f0170f",
+              faixa_predominante == "60 a 69 anos" ~ "#8b7191",
+              faixa_predominante == "70 a 79 anos" ~ "#0fe5f5",
+              faixa_predominante == "80 anos e mais" ~ "#d6b3ff",
+              TRUE ~ "gray"
+            )
           )
+        
+        # Configuração do conteúdo das labels
+        conteudo <- sprintf(
+          "<strong>Município de %s</strong><br/>
+       <b>0 a 4 anos: </b> %s<br/>
+       <b>5 a 9 anos:</b> %s<br/>
+       <b>10 a 14 anos:</b> %s<br/>
+       <b>15 a 19 anos:</b> %s<br/>
+       <b>20 a 29 anos:</b> %s<br/>
+       <b>30 a 39 anos:</b> %s<br/>
+       <b>40 a 49 anos:</b> %s<br/>
+       <b>50 a 59 anos:</b> %s<br/>
+       <b>60 a 69 anos:</b> %s<br/>
+       <b>70 a 79 anos:</b> %s<br/>
+       <b>80 anos e mais:</b> %s<br/>
+       <b>Predominância:</b> %s",
+          x$name_muni,
+          format(x$X0.a.4.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X5.a.9.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X10.a.14.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X15.a.19.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X20.a.29.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X30.a.39.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X40.a.49.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X50.a.59.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X60.a.69.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X70.a.79.anos, big.mark = ".", decimal.mark = ","),
+          format(x$X80.anos.e.mais, big.mark = ".", decimal.mark = ","),
+          x$faixa_predominante
         ) %>% lapply(htmltools::HTML)
-      #Mapas com leafleft
-      leaflet(x, options = leafletOptions(minZoom = 0, maxZoom = 15)) %>%
-        addTiles() %>%
-        addPolygons(
-          weight = 2,
-          opacity = 1,
-          color = "black",
-          fillOpacity = 1,
-          fillColor = ~ pal(valor),
-          dashArray = 1,
-          smoothFactor = 1.5,
-          highlightOptions =
-            highlightOptions(
+        
+        # Criação do mapa interativo com Leaflet
+        leaflet(x, options = leafletOptions(minZoom = 0, maxZoom = 15, zoomControl = FALSE)) %>%
+          addTiles() %>%
+          htmlwidgets::onRender(
+            "function(el, x) {
+            L.control.zoom({ position: 'topright' }).addTo(this);
+            }"
+          ) %>%
+          addPolygons(
+            weight = 2,
+            opacity = 1,
+            color = "black",
+            fillColor = ~cor,
+            fillOpacity = 1,
+            dashArray = 1,
+            smoothFactor = 1.5,
+            highlightOptions = highlightOptions(
               weight = 3,
               color = "white",
               dashArray = "3",
               fillOpacity = 0.5,
               bringToFront = TRUE
             ),
-          label = conteudo,
-          labelOptions = labelOptions(
-            style = list("font-weight" = "normal", padding = "3px 8px"),
-            textsize = "15px",
-            direction = "auto"
+            label = conteudo,
+            labelOptions = labelOptions(
+              style = list("font-weight" = "normal", padding = "3px 8px"),
+              textsize = "15px",
+              direction = "auto"
+            )
+          ) %>%
+          addLegend(
+            colors = c("#fdae61","#fee08b","#d73027","#91bfdb",
+            "#23eb70","#953184","#542788","#f0170f","#8b7191",
+            "#0fe5f5","#d6b3ff"),
+            labels = c("0 a 4 anos", "5 a 9 anos", "10 a 14 anos", "15 a 19 anos", 
+                       "20 a 29 anos", "30 a 39 anos", "40 a 49 anos", "50 a 59 anos",
+                       "60 a 69 anos","70 a 79 anos","80 anos e mais"),
+            opacity = 0.7,
+            title = "Predominância por Faixa Etária",
+            position = "bottomright"
           )
-        ) %>% addLegend(
-          pal = pal,
-          values = ~ valor,
-          opacity = 0.7,
-          title = "População",
-          position = "bottomright",
-          na.label = "Não disponível",
-          labFormat = labelFormat_decimal(
-            big.mark = ".",
-            decimal.mark = ",",
-            digits = 2
+        
+        
+      }else{ #Mapa por faixa etária
+        #Tratamento da informação
+        ##Filtrando informação
+        if (input$demo2ri == "Pará") {
+          df <-
+            demo2 %>% filter(localidade != "Pará",
+                             ano == input$demo2ano,
+                             categoria == input$demo2cat) %>%
+            select(ri, localidade, ano, valor)
+          x <- cbind(geopa, df)
+        }      else{
+          df <-
+            demo2 %>% filter(localidade != "Pará",
+                             ano == input$demo2ano,
+                             categoria == input$demo2cat) %>%
+            select(ri, localidade, ano, valor)
+          x <- cbind(geopa, df)
+          x <- x %>% filter(ri == input$demo2ri)
+          
+        }
+        
+        z <- x$valor[x$valor > 0]
+        bk <- unique(getJenksBreaks(z, 6, subset = NULL))
+        x$valor[x$valor == 0] <- NA
+        bins <- c(bk)
+        if (length(bins) < 2 || length(bins) < 5) {
+          bins <- 5
+        }
+        
+        pal <-
+          colorBin(
+            c("#B6EDF0", "#74B4E8", "#1F83E0", "#1D44B8", "#090991"),
+            domain = x$valor,
+            bins = bins
           )
-        )
+        conteudo <-
+          sprintf(
+            "<strong>%s</strong><br/> <b>População:</b> %s",
+            x$name_muni,
+            ifelse(
+              is.na(x$valor),
+              "Não disponível",
+              format(x$valor, big.mark = ".", decimal.mark = ",")
+            )
+          ) %>% lapply(htmltools::HTML)
+        #Mapas com leafleft
+        leaflet(x, options = leafletOptions(minZoom = 0, maxZoom = 15,zoomControl = FALSE)) %>%
+          addTiles() %>%
+          htmlwidgets::onRender(
+            "function(el, x) {
+            L.control.zoom({ position: 'topright' }).addTo(this);
+            }"
+          ) %>%
+          addPolygons(
+            weight = 2,
+            opacity = 1,
+            color = "black",
+            fillOpacity = 1,
+            fillColor = ~ pal(valor),
+            dashArray = 1,
+            smoothFactor = 1.5,
+            highlightOptions =
+              highlightOptions(
+                weight = 3,
+                color = "white",
+                dashArray = "3",
+                fillOpacity = 0.5,
+                bringToFront = TRUE
+              ),
+            label = conteudo,
+            labelOptions = labelOptions(
+              style = list("font-weight" = "normal", padding = "3px 8px"),
+              textsize = "15px",
+              direction = "auto"
+            )
+          ) %>% addLegend(
+            pal = pal,
+            values = ~ valor,
+            opacity = 0.7,
+            title = "População",
+            position = "bottomright",
+            na.label = "Não disponível",
+            labFormat = labelFormat_decimal(
+              big.mark = ".",
+              decimal.mark = ",",
+              digits = 2
+            )
+          )  
+      }
+      
+      
     })
     ##Tabela - População por Faixa Etária----
     output$demo2txt2 <- renderText({
@@ -3362,11 +3511,11 @@ demografia_pa_Server <- function(id) {
 }
 
 #Play do Módulo
-# ui <- dashboardPage(header = dashboardHeader(),
-#                     sidebar = dashboardSidebar(),
-#                     body = dashboardBody(fluidPage(demografia_pa_ui("demografia_pa"))))
-# 
-# server <- function(input, output) {
-#   demografia_pa_Server("demografia_pa")
-# }
-# shinyApp(ui, server)
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = dashboardBody(fluidPage(demografia_pa_ui("demografia_pa"))))
+
+server <- function(input, output) {
+  demografia_pa_Server("demografia_pa")
+}
+shinyApp(ui, server)
